@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Using Browserify with OpenLayers</title>
+    <style>
+        #map {
+            width: 1000px;
+            height: 1000px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.3.2/css/ol.css" type="text/css">
+    <script src="https://openlayers.org/en/v4.3.2/build/ol.js"></script>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div id="overlay" style="background-color: yellow;
+    width: 44px;
+    height: 20px;
+    border-radius: 0;">Jaipur</div>
+</body>
+<script>
+    // create a layer with the OSM source
+    var layer = new ol.layer.Tile({
+        source: new ol.source.OSM()
+    });
+
+    // create an interaction to add to the map that isn't there by default
+    var interaction = new ol.interaction.DragRotateAndZoom();
+
+    // create a control to add to the map that isn't there by default
+    var control = new ol.control.FullScreen();
+
+    // center on london, transforming to map projection
+    var center = ol.proj.transform([75.78781, 26.91962], 'EPSG:4326', 'EPSG:3857');
+
+    // an overlay to position at the center
+    var popup = new ol.Overlay({
+        element: document.getElementById('overlay'),
+        position: ol.proj.transform([75.78781, 26.91962], 'EPSG:4326', 'EPSG:3857')
+    });
+
+    // popup.setPosition([-1.212, 40.443]);
+
+
+    // view, starting at the center
+    var view = new ol.View({
+        center: center,
+        zoom: 6
+    });
+
+    // finally, the map with our custom interactions, controls and overlays
+    var map = new ol.Map({
+        target: 'map',
+        layers: [layer],
+        interactions: [interaction],
+        controls: [control],
+        overlays: [popup],
+        view: view
+    });
+
+    // map.addOverlay(popup);
+</script>
+
+</html>
